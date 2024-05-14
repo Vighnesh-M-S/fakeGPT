@@ -14,7 +14,7 @@ def home(request):
             return render(request, 'home.html', {'lang_list': lang_list, 'code': code, 'lang': request.POST['lang']})
         else:
 
-            openai.api_key = "sk-proj-u4DuGsyYi9NrME1Qa6SfT3BlbkFJNl2D05okyWSnEif1x617"
+            openai.api_key = ""
             openai.Model.list()
 
             try:
