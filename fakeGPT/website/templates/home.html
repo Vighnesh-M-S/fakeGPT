@@ -2,11 +2,11 @@
 {%if response%}
 
 <pre>
-    <code class='line-numbers language-{{lang}}'>
-    {{response}}
-    </code>
-    </pre>
-    <br></br>
+<code class='line-numbers language-{{lang}}'>
+{{response}}
+</code>
+</pre>
+<br></br>
     
     <form method=POST action="{% url 'home'%}">
         {%  csrf_token %}
