@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from openai import OpenAI
 import re
-# from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.forms import UserCreationForm
-# from .forms import SignUpForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+from .forms import SignUpForm
 api = ''
 
 # from django.contrib.auth import authenticate, login, logout
@@ -100,3 +100,44 @@ def suggest(request):
 
 
 	return render(request, 'suggest.html', {'lang_list':lang_list})
+
+def login_user(request):
+	if request.method == "POST":
+		username = request.POST['username']
+		password = request.POSt['password']
+		user = authenticate(request, username = username, password = password)
+		if user is not None:
+			login(request, user)
+			messages.success(request, "You have logged in")
+			return redirect('home')
+		else:
+			messages.success(request, "Error logging in")
+			return redirect('home')
+	
+	else:
+		return render(request, 'home.html', {})
+	
+def logout_user(request):
+	logout(request)
+	messages.success(request, "You have been logged out")
+	return redirect('home')
+
+def register_user(request):
+	if request.method == "POST":
+		form = SignUpForm(request.POST)
+		if form.is_valid():
+			form.save()
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password1']
+			user = authenticate(username = username, password = password)
+			login(request, user)
+			messages.success(request, "You have Registered ")
+			return redirect('home')
+		
+	else:
+		form = SignUpForm
+
+	return render(request, 'register.html', {"form": form})
+
+
+
