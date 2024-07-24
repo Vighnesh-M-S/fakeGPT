@@ -5,12 +5,11 @@ import re
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm
+from .models import Code
 api = ''
 
-# from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.forms import UserCreationForm
-# from .forms import SignUpForm
-# from .models import Code
+
+from .models import Code
 
 # client = OpenAI()
 def home(request):
@@ -42,15 +41,9 @@ def home(request):
 
 				code_snippet = re.sub(r'```(?:\w+)?\n(.+?)\n```', r'\1', response, flags=re.DOTALL).strip()
 				
-				# return render(request, 'home.html', {'lang_list':lang_list})
-				# # Parse the response
-				# message = response.choices[0].message.content
-				# # Save To Database
-				# record = Code(question=code, code_answer=response, language=lang, user=request.user)
-				# record.save()
-
 				return render(request, 'home.html', {'lang_list':lang_list, 'response':code_snippet, 'lang':lang})
-							
+				record = Code(question=code, code_answer=response, language=lang, user=request.user)	
+				record.save()		
 			except Exception as e:
 				return render(request, 'home.html', {'lang_list':lang_list, 'response':e, 'lang':lang})
 
@@ -94,7 +87,8 @@ def suggest(request):
 				# record.save()
 
 				return render(request, 'suggest.html', {'lang_list':lang_list, 'response':code_snippet, 'lang':lang})
-							
+				record = Code(question=code, code_answer=response, language=lang, user=request.user)	
+				record.save()			
 			except Exception as e:
 				return render(request, 'suggest.html', {'lang_list':lang_list, 'response':e, 'lang':lang})
 
@@ -138,6 +132,15 @@ def register_user(request):
 		form = SignUpForm
 
 	return render(request, 'register.html', {"form": form})
+
+
+def past(request):
+	if request.user.is_authenticated:
+		code = Code.objects.filter(user_id=request.user.id)
+		return render(request, 'past.html', {"code":code})	
+	else:
+		messages.success(request, "You Must Be Logged In To View This Page")
+		return redirect('home')
 
 
 
