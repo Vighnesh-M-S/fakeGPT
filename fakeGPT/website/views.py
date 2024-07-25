@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm
 from .models import Code
-api = 'sk-proj-25QauDwScdq6q6QCfH31T3BlbkFJmfduRPuVHn7xR8qU8nXm'
+api = ''
 
 
 from .models import Code
