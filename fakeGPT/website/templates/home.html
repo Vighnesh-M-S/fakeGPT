@@ -75,9 +75,11 @@ else:
 		<br/>
 
 		<button type="submit" class="btn btn-secondary">Login</button>
-    <p>Dont have an account</p>
-    <button class="btn btn-secondary" href="{% url 'register' %}" >Register</button>
+      
 	</form>
+  <br>
+  <p>Dont have an account</p>
+  <a href="{% url 'register'  %}" class="btn btn-secondary ">Register</a>
 </div>
 {% endif %}
 {%endblock%}

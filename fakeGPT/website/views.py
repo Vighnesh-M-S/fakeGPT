@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm
 from .models import Code
-api = ''
+api = 'sk-proj-25QauDwScdq6q6QCfH31T3BlbkFJmfduRPuVHn7xR8qU8nXm'
 
 
 from .models import Code
@@ -41,9 +41,10 @@ def home(request):
 
 				code_snippet = re.sub(r'```(?:\w+)?\n(.+?)\n```', r'\1', response, flags=re.DOTALL).strip()
 				
+				record = Code(question=code, code_answer=code_snippet, language=lang, user=request.user)	
+				record.save()
 				return render(request, 'home.html', {'lang_list':lang_list, 'response':code_snippet, 'lang':lang})
-				record = Code(question=code, code_answer=response, language=lang, user=request.user)	
-				record.save()		
+					
 			except Exception as e:
 				return render(request, 'home.html', {'lang_list':lang_list, 'response':e, 'lang':lang})
 
@@ -85,10 +86,10 @@ def suggest(request):
 				# # Save To Database
 				# record = Code(question=code, code_answer=response, language=lang, user=request.user)
 				# record.save()
-
+				record = Code(question=code, code_answer=code_snippet, language=lang, user=request.user)	
+				record.save()
 				return render(request, 'suggest.html', {'lang_list':lang_list, 'response':code_snippet, 'lang':lang})
-				record = Code(question=code, code_answer=response, language=lang, user=request.user)	
-				record.save()			
+							
 			except Exception as e:
 				return render(request, 'suggest.html', {'lang_list':lang_list, 'response':e, 'lang':lang})
 
@@ -144,3 +145,8 @@ def past(request):
 
 
 
+def delete_past(request, Past_id):
+	past = Code.objects.get(pk=Past_id)
+	past.delete()
+	messages.success(request, "Deleted Successfully")
+	return redirect('past')
